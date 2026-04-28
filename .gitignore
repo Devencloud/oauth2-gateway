@@ -33,8 +33,7 @@ build/
 .vscode/
 
 # Sensitive properties
-src/main/resources/application.yml
-src/main/resources/application.properties
+
 
 # Logs
 *.log

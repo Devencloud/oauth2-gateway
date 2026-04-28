@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: gateway
+  data:
+    redis:
+      host: redis.railway.internal
+      port: 6379
+      password: PyfLpSIdNVQYrZnxcZFWgEMlhwmOUFmO
+  session:
+    store-type: redis
+    timeout: 30m
+  security:
+    oauth2:
+      client:
+        provider:
+          auth-server:
+            issuer-uri: http://oauth2-auth-server.railway.internal:9000
+        registration:
+          my-client:
+            provider: auth-server
+            client-id: my-client
+            client-secret: my-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: ${GATEWAY_URL}/login/oauth2/code/my-client
+            scope: openid,profile
+            client-authentication-method: client_secret_basic
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: resource-service
+              uri: http://oauth2-resource-server.railway.internal:8080
+              predicates:
+                - Path=/api/**
+              filters:
+                - TokenRelay=
+
+server:
+  port: 8081
