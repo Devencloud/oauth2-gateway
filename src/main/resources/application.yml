@@ -1,29 +1,22 @@
 spring:
-  application:
-    name: gateway
-  data:
-    redis:
-      host: redis.railway.internal
-      port: 6379
-      password: PyfLpSIdNVQYrZnxcZFWgEMlhwmOUFmO
-  session:
-    store-type: redis
-    timeout: 30m
   security:
     oauth2:
       client:
         provider:
           auth-server:
             issuer-uri: https://oauth2-auth-server-production.up.railway.app
+
         registration:
-             my-client:
-             provider: auth-server
-             client-id: my-client
-             client-secret: my-secret
-             authorization-grant-type: authorization_code
-             redirect-uri: ${GATEWAY_URL}/login/oauth2/code/my-client
-             scope: openid,profile
-             client-authentication-method: client_secret_basic
+          auth-server:
+            provider: auth-server
+            client-id: auth-server
+            client-secret: secret
+            authorization-grant-type: authorization_code
+            redirect-uri: "https://oauth2-gateway-production.up.railway.app/login/oauth2/code/auth-server"
+            scope:
+              - openid
+              - profile
+            client-authentication-method: client_secret_basic
   cloud:
     gateway:
       server:
