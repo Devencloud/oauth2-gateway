@@ -1,4 +1,17 @@
 spring:
+  application:
+    name: gateway
+
+  data:
+    redis:
+      host: ${SPRING_DATA_REDIS_HOST}
+      port: ${SPRING_DATA_REDIS_PORT}
+      password: ${SPRING_DATA_REDIS_PASSWORD}
+
+  session:
+    store-type: redis
+    timeout: 30m
+
   security:
     oauth2:
       client:
@@ -17,6 +30,7 @@ spring:
               - openid
               - profile
             client-authentication-method: client_secret_basic
+
   cloud:
     gateway:
       server:
