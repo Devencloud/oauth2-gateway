@@ -16,14 +16,14 @@ spring:
           auth-server:
             issuer-uri: https://oauth2-auth-server-production.up.railway.app
         registration:
-          my-client:
-            provider: auth-server
-            client-id: my-client
-            client-secret: my-secret
-            authorization-grant-type: authorization_code
-            redirect-uri: ${GATEWAY_URL}/login/oauth2/code/my-client
-            scope: openid,profile
-            client-authentication-method: client_secret_basic
+             my-client:
+             provider: auth-server
+             client-id: my-client
+             client-secret: my-secret
+             authorization-grant-type: authorization_code
+             redirect-uri: ${GATEWAY_URL}/login/oauth2/code/my-client
+             scope: openid,profile
+             client-authentication-method: client_secret_basic
   cloud:
     gateway:
       server:
