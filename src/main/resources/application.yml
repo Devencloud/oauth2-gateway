@@ -14,7 +14,7 @@ spring:
       client:
         provider:
           auth-server:
-            issuer-uri: http://oauth2-auth-server.railway.internal:9000
+            issuer-uri: https://oauth2-auth-server-production.up.railway.app
         registration:
           my-client:
             provider: auth-server
