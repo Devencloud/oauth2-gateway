@@ -9,7 +9,10 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
+import reactor.core.publisher.Mono;
+import java.net.URI;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -27,7 +30,17 @@ public class SecurityConfig {
                 .oauth2Login(Customizer.withDefaults())
                 .logout(logout -> logout
                         .requiresLogout(ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, "/logout"))
-                        .logoutSuccessHandler(oidcLogoutSuccessHandler(clientRegistrationRepository)))
+                        .logoutSuccessHandler((exchange, authentication) ->
+                            exchange.getExchange().getSession()
+                                .flatMap(session -> session.invalidate())
+                                .then(Mono.fromRunnable(() -> {
+                                    exchange.getExchange().getResponse()
+                                        .setStatusCode(HttpStatus.FOUND);
+                                    exchange.getExchange().getResponse().getHeaders()
+                                        .setLocation(URI.create(
+                                            "https://oauth2-gateway-production.up.railway.app/logged-out"));
+                                }))
+                        ))
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(
                                 new RedirectServerAuthenticationEntryPoint(
@@ -35,14 +48,5 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable());
 
         return http.build();
-    }
-
-    private org.springframework.security.oauth2.client.oidc.web.server.logout.OidcClientInitiatedServerLogoutSuccessHandler oidcLogoutSuccessHandler(
-            ReactiveClientRegistrationRepository clientRegistrationRepository) {
-
-        org.springframework.security.oauth2.client.oidc.web.server.logout.OidcClientInitiatedServerLogoutSuccessHandler handler = new org.springframework.security.oauth2.client.oidc.web.server.logout.OidcClientInitiatedServerLogoutSuccessHandler(
-                clientRegistrationRepository);
-        handler.setPostLogoutRedirectUri("https://oauth2-gateway-production.up.railway.app/logged-out");
-        return handler;
     }
 }
