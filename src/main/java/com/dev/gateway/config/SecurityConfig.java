@@ -22,7 +22,7 @@ public class SecurityConfig {
 
         http
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/login/**", "/oauth2/**", "/login-success").permitAll()
+                        .pathMatchers("/login/**", "/oauth2/**", "/login-success", "/logged-out").permitAll()
                         .anyExchange().authenticated())
                 .oauth2Login(Customizer.withDefaults())
                 .logout(logout -> logout
@@ -42,7 +42,7 @@ public class SecurityConfig {
 
         org.springframework.security.oauth2.client.oidc.web.server.logout.OidcClientInitiatedServerLogoutSuccessHandler handler = new org.springframework.security.oauth2.client.oidc.web.server.logout.OidcClientInitiatedServerLogoutSuccessHandler(
                 clientRegistrationRepository);
-        handler.setPostLogoutRedirectUri("https://oauth2-gateway-production.up.railway.app/");
+        handler.setPostLogoutRedirectUri("https://oauth2-gateway-production.up.railway.app/logged-out");
         return handler;
     }
 }
