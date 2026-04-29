@@ -37,7 +37,7 @@ spring:
         webflux:
           routes:
             - id: resource-service
-              uri: http://oauth2-resource-server.railway.internal:8082
+              uri: http://oauth2-resource-server.railway.internal:8080
               predicates:
                 - Path=/api/**
               filters:
