@@ -42,7 +42,7 @@ public class SecurityConfig {
 
         org.springframework.security.oauth2.client.oidc.web.server.logout.OidcClientInitiatedServerLogoutSuccessHandler handler = new org.springframework.security.oauth2.client.oidc.web.server.logout.OidcClientInitiatedServerLogoutSuccessHandler(
                 clientRegistrationRepository);
-        handler.setPostLogoutRedirectUri("https://oauth2-gateway-production.up.railway.app/logged-out");
+        handler.setPostLogoutRedirectUri("https://oauth2-gateway-production.up.railway.app/");
         return handler;
     }
 }
