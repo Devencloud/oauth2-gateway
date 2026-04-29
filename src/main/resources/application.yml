@@ -23,7 +23,7 @@ spring:
           auth-server:
             provider: auth-server
             client-id: auth-server
-            client-secret: secret
+            client-secret: my-secret
             authorization-grant-type: authorization_code
             redirect-uri: "https://oauth2-gateway-production.up.railway.app/login/oauth2/code/auth-server"
             scope:
