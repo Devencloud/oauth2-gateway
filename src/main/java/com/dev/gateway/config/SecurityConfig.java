@@ -30,16 +30,19 @@ public class SecurityConfig {
                 .oauth2Login(Customizer.withDefaults())
                 .logout(logout -> logout
                         .requiresLogout(ServerWebExchangeMatchers.pathMatchers(HttpMethod.GET, "/logout"))
-                        .logoutSuccessHandler((exchange, authentication) -> exchange.getExchange().getSession()
-                                .flatMap(session -> session.invalidate())
-                                .then(Mono.defer(() -> {
-                                    exchange.getExchange().getResponse()
-                                            .setStatusCode(HttpStatus.FOUND);
-                                    exchange.getExchange().getResponse().getHeaders()
-                                            .setLocation(URI.create(
-                                                    "https://oauth2-gateway-production.up.railway.app/logged-out"));
-                                    return exchange.getExchange().getResponse().setComplete();
-                                }))))
+                        .logoutSuccessHandler((exchange, authentication) ->
+                                exchange.getExchange().getSession()
+                                        .flatMap(session -> session.invalidate())
+                                        .then(Mono.defer(() -> {
+                                            exchange.getExchange().getResponse()
+                                                    .setStatusCode(HttpStatus.FOUND);
+                                            exchange.getExchange().getResponse().getHeaders()
+                                                    .setLocation(URI.create(
+                                                            "https://oauth2-auth-server-production.up.railway.app/connect/logout"
+                                                            + "?post_logout_redirect_uri=https://oauth2-gateway-production.up.railway.app/logged-out"
+                                                            + "&client_id=auth-server"));
+                                            return exchange.getExchange().getResponse().setComplete();
+                                        }))))
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(
                                 new RedirectServerAuthenticationEntryPoint(
